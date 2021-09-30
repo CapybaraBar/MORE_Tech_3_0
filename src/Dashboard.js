@@ -69,7 +69,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 
-function DashboardContent() {
+export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -183,8 +183,4 @@ function DashboardContent() {
         </Box>
       </Box>
   );
-}
-
-export default function Dashboard() {
-  return <DashboardContent />;
 }
