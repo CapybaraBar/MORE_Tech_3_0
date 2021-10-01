@@ -8,12 +8,12 @@ import AuthFormControl from '../../src/AuthFormControl'
 import AuthButton from '../../src/AuthButton'
 
 const Register = () => {
-  const [name, setName] = React.useState('')
-  const [email, setEmail] = React.useState('')
+  const [username, setUsername] = React.useState('')
+  const [phone, setPhone] = React.useState('')
   const [password, setPassword] = React.useState('')
 
-  const onChangeName = (e) => setName(e.target.value)
-  const onChangeEmail = (e) => setEmail(e.target.value)
+  const onChangeUsername = (e) => setUsername(e.target.value)
+  const onChangePhone = (e) => setPhone(e.target.value)
   const onChangePassword = (e) => setPassword(e.target.value)
 
   const onSubmit = async (e) => {
@@ -45,8 +45,8 @@ const Register = () => {
             name="username"
             type="text"
             label="ЛОГИН"
-            value={name}
-            onChange={onChangeName}
+            value={username}
+            onChange={onChangeUsername}
             variant="outlined"
             margin="normal"
           />
@@ -57,8 +57,8 @@ const Register = () => {
             name="phone"
             type="tel"
             label="ТЕЛЕФОН"
-            value={email}
-            onChange={onChangeEmail}
+            value={phone}
+            onChange={onChangePhone}
             variant="outlined"
             margin="normal"
           />

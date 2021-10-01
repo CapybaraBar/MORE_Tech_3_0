@@ -8,10 +8,10 @@ import AuthFormControl from '../../src/AuthFormControl'
 import AuthButton from '../../src/AuthButton'
 
 const Login = () => {
-  const [email, setEmail] = React.useState('')
+  const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
 
-  const onChangeLogin = (e) => setEmail(e.target.value)
+  const onChangeUsername = (e) => setUsername(e.target.value)
   const onChangePassword = (e) => setPassword(e.target.value)
 
   const onSubmit = async (e) => {
@@ -42,8 +42,8 @@ const Login = () => {
             name="username"
             type="text"
             label="ЛОГИН"
-            value={email}
-            onChange={onChangeLogin}
+            value={username}
+            onChange={onChangeUsername}
             variant="outlined"
             margin="normal"
           />

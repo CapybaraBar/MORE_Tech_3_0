@@ -6,7 +6,8 @@ const Root = styled('div')(({ theme }) => ({
   '&': {
     textAlign: 'center',
     paddingTop: theme.spacing(8),
-    background: 'url(/background.png)',
+    backgroundColor: '#00264c',
+    background: 'url(/background.jpg)',
     backgroundPosition: '50% 50%',
     backgroundSize: 'cover',
     height: '100%',
