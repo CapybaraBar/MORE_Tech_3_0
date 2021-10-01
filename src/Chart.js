@@ -1,11 +1,18 @@
-import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
-import Title from './Title';
+import * as React from 'react'
+import { useTheme } from '@mui/material/styles'
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Label,
+  ResponsiveContainer,
+} from 'recharts'
+import Title from './Title'
 
 // Generate Sales Data
 function createData(time, amount) {
-  return { time, amount };
+  return { time, amount }
 }
 
 const data = [
@@ -18,10 +25,10 @@ const data = [
   createData('18:00', 2400),
   createData('21:00', 2400),
   createData('24:00', undefined),
-];
+]
 
 export default function Chart() {
-  const theme = useTheme();
+  const theme = useTheme()
 
   return (
     <React.Fragment>
@@ -67,5 +74,5 @@ export default function Chart() {
         </LineChart>
       </ResponsiveContainer>
     </React.Fragment>
-  );
+  )
 }
