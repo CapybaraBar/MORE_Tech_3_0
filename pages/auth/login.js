@@ -35,7 +35,7 @@ const Login = () => {
 
   return (
     <AuthContainer>
-      <AuthForm onSubmit={onSubmit} autoComplete="off" noValidate>
+      <AuthForm autoComplete="off" noValidate action="/api/login" method="post">
         <AuthFormControl variant="outlined">
           <TextField
             id="username"

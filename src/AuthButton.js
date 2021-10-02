@@ -1,6 +1,6 @@
+import * as React from 'react'
 import { styled } from '@mui/material/styles'
 import { Button } from '@mui/material'
-import React from 'react'
 
 const Root = styled(Button)(({ theme }) => ({
   '&': {

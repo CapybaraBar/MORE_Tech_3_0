@@ -21,7 +21,13 @@
     "prop-types": "15.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "recharts": "2.1.4"
+    "recharts": "2.1.4",
+    "uuid": "8.3.2",
+    "@hapi/iron": "6.0.0",
+    "cookie": "0.4.1",
+    "passport": "0.5.0",
+    "passport-local": "1.0.0",
+    "next-connect": "0.10.2"
   },
   "devDependencies": {
     "prettier": "2.4.1",

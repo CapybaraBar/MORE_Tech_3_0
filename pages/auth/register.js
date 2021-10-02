@@ -38,7 +38,12 @@ const Register = () => {
 
   return (
     <AuthContainer>
-      <AuthForm onSubmit={onSubmit} autoComplete="off" noValidate>
+      <AuthForm
+        autoComplete="off"
+        noValidate
+        action="/api/signup"
+        method="post"
+      >
         <AuthFormControl variant="outlined">
           <TextField
             id="username"

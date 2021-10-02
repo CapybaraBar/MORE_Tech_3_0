@@ -1,11 +1,14 @@
-import React from 'react'
+import * as React from 'react'
 import { styled } from '@mui/material/styles'
 import { Card, CardContent } from '@mui/material'
 
 const Root = styled('form')(({ theme }) => ({
   '&': {
-    width: 480,
+    width: '480px',
     margin: `${theme.spacing(4)} auto`,
+    ['@media (max-width:780px)']: {
+      width: '100%',
+    },
   },
 }))
 
