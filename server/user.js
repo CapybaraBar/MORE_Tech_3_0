@@ -1,7 +1,6 @@
 import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
-
-const users = []
+import * as db from './db'
 
 export async function createUser({ username, password }) {
   const salt = crypto.randomBytes(16).toString('hex')
@@ -9,23 +8,22 @@ export async function createUser({ username, password }) {
     .pbkdf2Sync(password, salt, 1000, 64, 'sha512')
     .toString('hex')
 
+  const createdAt = Date.now()
   const user = {
     id: uuidv4(),
-    createdAt: Date.now(),
+    createdAt,
     username,
     hash,
     salt,
   }
 
-  users.push(user)
+  await db.createUser(user)
 
-  console.log(users)
-
-  return { username, createdAt: Date.now() }
+  return { username, createdAt }
 }
 
 export async function findUser({ username }) {
-  return users.find((user) => user.username === username)
+  return await db.findUser(username)
 }
 
 export function validatePassword(user, inputPassword) {

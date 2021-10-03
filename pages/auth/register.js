@@ -1,11 +1,11 @@
 import React from 'react'
 import { TextField } from '@mui/material'
 
-import Link from '../../src/Link'
-import AuthContainer from '../../src/AuthContainer'
-import AuthForm from '../../src/AuthForm'
-import AuthFormControl from '../../src/AuthFormControl'
-import AuthButton from '../../src/AuthButton'
+import Link from '../../client/Link'
+import AuthContainer from '../../client/AuthContainer'
+import AuthForm from '../../client/AuthForm'
+import AuthFormControl from '../../client/AuthFormControl'
+import AuthButton from '../../client/AuthButton'
 
 const Register = () => {
   const [username, setUsername] = React.useState('')
@@ -15,26 +15,6 @@ const Register = () => {
   const onChangeUsername = (e) => setUsername(e.target.value)
   const onChangePhone = (e) => setPhone(e.target.value)
   const onChangePassword = (e) => setPassword(e.target.value)
-
-  const onSubmit = async (e) => {
-    e.preventDefault()
-
-    window.alert('qqq')
-    // const http = new Http()
-    //
-    // const data = {
-    //   name: e.currentTarget.username.value,
-    //   email: e.currentTarget.email.value,
-    //   password: e.currentTarget.password.value,
-    // }
-    //
-    // const response = await http.post('api/auth/register', data)
-    // if (response.ok) {
-    //   location.href = '/'
-    // } else {
-    //   alert('Failed to register!')
-    // }
-  }
 
   return (
     <AuthContainer>

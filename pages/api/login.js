@@ -1,8 +1,8 @@
 import passport from 'passport'
 import nextConnect from 'next-connect'
 
-import { localStrategy } from '../../lib/password-local'
-import { setLoginSession } from '../../lib/auth'
+import { localStrategy } from '../../server/password-local'
+import { setAuthCookie } from '../../server/auth'
 
 const authenticate = (method, req, res) =>
   new Promise((resolve, reject) => {
@@ -22,12 +22,16 @@ export default nextConnect()
   .post(async (req, res) => {
     try {
       const user = await authenticate('local', req, res)
-      // session is the payload to save in the token, it may contain basic info about the user
-      const session = { ...user }
 
-      await setLoginSession(res, session)
+      console.log('####', user)
 
-      res.status(200).send({ done: true })
+      await setAuthCookie(res, user)
+
+      res
+        .writeHead(302, {
+          Location: encodeURI(`/`),
+        })
+        .end()
     } catch (error) {
       console.error(error)
       res

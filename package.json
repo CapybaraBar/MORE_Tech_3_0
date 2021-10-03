@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "db:init": "node scripts/init.js",
+    "db:show": "node scripts/show.js"
   },
   "dependencies": {
     "@emotion/cache": "11.4.0",
@@ -23,11 +25,12 @@
     "react-dom": "17.0.2",
     "recharts": "2.1.4",
     "uuid": "8.3.2",
-    "@hapi/iron": "6.0.0",
+    "jsonwebtoken": "8.5.1",
     "cookie": "0.4.1",
     "passport": "0.5.0",
     "passport-local": "1.0.0",
-    "next-connect": "0.10.2"
+    "next-connect": "0.10.2",
+    "pg": "8.7.1"
   },
   "devDependencies": {
     "prettier": "2.4.1",

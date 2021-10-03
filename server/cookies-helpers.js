@@ -1,6 +1,6 @@
 import { serialize, parse } from 'cookie'
 
-const TOKEN_NAME = 'token'
+const TOKEN_NAME = 'jwt'
 
 export const MAX_AGE = 60 * 60 * 8 // 8 hours
 
@@ -27,10 +27,10 @@ export function removeTokenCookie(res) {
 }
 
 export function parseCookies(req) {
-  // For API Routes we don't need to parse the cookies.
-  if (req.cookies) return req.cookies
+  if (req.cookies) {
+    return req.cookies
+  }
 
-  // For pages we do need to parse the cookies.
   const cookie = req.headers?.cookie
   return parse(cookie || '')
 }

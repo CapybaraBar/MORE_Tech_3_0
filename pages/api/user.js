@@ -1,9 +1,9 @@
-import { getLoginSession } from '../../lib/auth'
-import { findUser } from '../../lib/user'
+import { getAuthCookie } from '../../server/auth'
+import { findUser } from '../../server/user'
 
 export default async function user(req, res) {
   try {
-    const session = await getLoginSession(req)
+    const session = await getAuthCookie(req)
     const user = (session && (await findUser(session))) ?? null
 
     res.status(200).json({ user })

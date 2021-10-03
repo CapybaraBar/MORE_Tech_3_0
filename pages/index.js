@@ -1,14 +1,14 @@
 import * as React from 'react'
-import { getLoginSession } from '../lib/auth'
+import { getAuthCookie } from '../server/auth'
 
-import Dashboard from '../src/Dashboard'
+import Dashboard from '../client/Dashboard'
 
 export default function Index() {
   return <Dashboard />
 }
 
 export const getServerSideProps = async function ({ req, res }) {
-  const session = await getLoginSession(req)
+  const session = await getAuthCookie(req)
   console.log(session)
 
   if (session == null) {
