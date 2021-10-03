@@ -1,33 +1,66 @@
 const { Client } = require('pg')
-
-function getClient() {
-  const client = new Client({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'postgres',
-    password: '12345',
-    port: 5432,
-  })
-  return client
-}
-
-/*
-const { Pool } = require('pg')
 const { RDS } = require('aws-sdk')
 
-const signerOptions = {
-  credentials: {
-    accessKeyId: 'YOUR-ACCESS-KEY',
-    secretAccessKey: 'YOUR-SECRET-ACCESS-KEY',
-  },
-  region: 'us-east-1',
-  hostname: 'example.aslfdewrlk.us-east-1.rds.amazonaws.com',
-  port: 5432,
-  username: 'api-user',
+function getEnv(key) {
+  const env = process.env[key]
+  if (env == null || env === '') {
+    throw new Error(`Environment variable "${key}" is required`)
+  }
+  return env
 }
-const signer = new RDS.Signer()
-const getPassword = () => signer.getAuthToken(signerOptions)
- */
+
+function getClient() {
+  switch (process.env.DBMODE) {
+    case 'local': {
+      const user = process.env.PGUSER || 'postgres'
+      const host = process.env.PGHOST || 'localhost'
+      const database = process.env.PGDATABASE || 'postgres'
+      const password = process.env.PGPASSWORD || '12345'
+      const port = parseInt(process.env.PGPORT) || 5432
+
+      return new Client({
+        user,
+        host,
+        database,
+        password,
+        port,
+      })
+    }
+    case 'aws': {
+      const accessKeyId = getEnv('CAPYBARA_AWS_ACCESS_KEY_ID')
+      const secretAccessKey = getEnv('CAPYBARA_AWS_SECRET_ACCESS_KEY')
+      const region = getEnv('CAPYBARA_AWS_POSTGRES_REGION')
+      const hostname = getEnv('CAPYBARA_AWS_POSTGRES_HOSTNAME')
+      const port = parseInt(getEnv('CAPYBARA_AWS_POSTGRES_PORT'))
+      const username = getEnv('CAPYBARA_AWS_POSTGRES_USERNAME')
+      const database = getEnv('CAPYBARA_AWS_POSTGRES_DATABASE')
+
+      const signerOptions = {
+        credentials: {
+          accessKeyId,
+          secretAccessKey,
+        },
+        region,
+        hostname,
+        port,
+        username,
+      }
+      const signer = new RDS.Signer()
+      const getPassword = () => signer.getAuthToken(signerOptions)
+
+      return new Client({
+        host: signerOptions.hostname,
+        port: signerOptions.port,
+        user: signerOptions.username,
+        database,
+        password: getPassword,
+      })
+    }
+    default: {
+      throw new Error('Environment variable "DBMODE" is required [local, aws]')
+    }
+  }
+}
 
 function escapeId(str) {
   return `"${String(str).replace(/(["])/gi, '$1$1')}"`

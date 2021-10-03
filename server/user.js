@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
-import * as db from './db'
+import * as db from './database'
 
 export async function createUser({ username, password }) {
   const salt = crypto.randomBytes(16).toString('hex')
@@ -22,7 +22,7 @@ export async function createUser({ username, password }) {
   return { username, createdAt }
 }
 
-export async function findUser({ username }) {
+export async function findUser(username) {
   return await db.findUser(username)
 }
 

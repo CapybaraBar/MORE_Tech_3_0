@@ -1,22 +1,29 @@
 import React from 'react'
 import { TextField } from '@mui/material'
 
-import Link from '../../client/Link'
-import AuthContainer from '../../client/AuthContainer'
-import AuthForm from '../../client/AuthForm'
-import AuthFormControl from '../../client/AuthFormControl'
-import AuthButton from '../../client/AuthButton'
+import Link from '../client/Link'
+import AuthContainer from '../client/AuthContainer'
+import AuthForm from '../client/AuthForm'
+import AuthFormControl from '../client/AuthFormControl'
+import AuthButton from '../client/AuthButton'
 
-const Login = () => {
+const Register = () => {
   const [username, setUsername] = React.useState('')
+  const [phone, setPhone] = React.useState('')
   const [password, setPassword] = React.useState('')
 
   const onChangeUsername = (e) => setUsername(e.target.value)
+  const onChangePhone = (e) => setPhone(e.target.value)
   const onChangePassword = (e) => setPassword(e.target.value)
 
   return (
     <AuthContainer>
-      <AuthForm autoComplete="off" noValidate action="/api/login" method="post">
+      <AuthForm
+        autoComplete="off"
+        noValidate
+        action="/api/signup"
+        method="post"
+      >
         <AuthFormControl variant="outlined">
           <TextField
             id="username"
@@ -47,15 +54,15 @@ const Login = () => {
           color="primary"
           size="large"
         >
-          ВОЙТИ
+          ЗАРЕГИСТРИРОВАТЬСЯ
         </AuthButton>
         <br />
-        <Link href="/auth/register" color="secondary">
-          Создать аккаунт
+        <Link href="/login" color="secondary">
+          У Вас уже есть аккаунт?
         </Link>
       </AuthForm>
     </AuthContainer>
   )
 }
 
-export default Login
+export default Register

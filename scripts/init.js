@@ -1,4 +1,4 @@
-const { init } = require('../server/db')
+const { init } = require('../server/database')
 
 void (async () => {
   await init()

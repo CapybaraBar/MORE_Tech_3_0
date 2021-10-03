@@ -3,7 +3,7 @@ import { setTokenCookie, getTokenCookie } from './cookies-helpers'
 
 const TOKEN_SECRET = process.env.TOKEN_SECRET || 'TOKEN_SECRET'
 
-export async function setAuthCookie(res, { id, createdAt, username }) {
+export function setAuthCookie(res, { id, createdAt, username }) {
   const token = jwt.sign(
     {
       id,
@@ -19,7 +19,7 @@ export async function setAuthCookie(res, { id, createdAt, username }) {
   setTokenCookie(res, token)
 }
 
-export async function getAuthCookie(req) {
+export function getAuthCookie(req) {
   const token = getTokenCookie(req)
 
   if (token == null) {

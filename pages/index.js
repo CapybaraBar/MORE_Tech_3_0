@@ -8,19 +8,16 @@ export default function Index() {
 }
 
 export const getServerSideProps = async function ({ req, res }) {
-  const session = await getAuthCookie(req)
-  console.log(session)
+  const user = await getAuthCookie(req)
 
-  if (session == null) {
+  if (user == null) {
     return {
       redirect: {
-        destination: '/auth/login',
+        destination: '/login',
         permanent: false,
       },
     }
   }
-
-  const user = session
 
   return {
     props: {

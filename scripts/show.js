@@ -1,4 +1,4 @@
-const { show } = require('../server/db')
+const { show } = require('../server/database')
 
 void (async () => {
   await show()

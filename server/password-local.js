@@ -7,8 +7,7 @@ export const localStrategy = new Local.Strategy(function (
   password,
   done,
 ) {
-  console.log({ username, password })
-  findUser({ username })
+  findUser(username)
     .then((user) => {
       if (user == null) {
         done(new Error('Юзер не существует'))

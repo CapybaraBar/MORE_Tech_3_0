@@ -23,9 +23,7 @@ export default nextConnect()
     try {
       const user = await authenticate('local', req, res)
 
-      console.log('####', user)
-
-      await setAuthCookie(res, user)
+      setAuthCookie(res, user)
 
       res
         .writeHead(302, {
@@ -36,7 +34,7 @@ export default nextConnect()
       console.error(error)
       res
         .writeHead(302, {
-          Location: encodeURI(`/auth/login?error=${error.message}`),
+          Location: encodeURI(`/login?error=${error.message}`),
         })
         .end()
     }
