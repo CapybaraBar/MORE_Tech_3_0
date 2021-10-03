@@ -12,8 +12,8 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --write .",
-    "db:init": "node scripts/init.js",
-    "db:show": "node scripts/show.js"
+    "db:init": "cross-env DBMODE=local node scripts/init.js",
+    "db:show": "cross-env DBMODE=local node scripts/show.js"
   },
   "dependencies": {
     "@emotion/cache": "11.4.0",
