@@ -47,6 +47,5 @@ yarn dev
 ## Ссылки на сторонние источники
 
 - [Next.js Documentation](https://nextjs.org/docs) - Next.js и API.
-- [Passport](https://github.com/jaredhanson/passport) и [Passport Local](https://github.com/jaredhanson/passport-local) -  Аутентификация
+- [Passport](https://github.com/jaredhanson/passport) и [Passport Local](https://github.com/jaredhanson/passport-local) - Аутентификация
 - [JSON Web Tokens](https://github.com/auth0/node-jsonwebtoken) - открытый стандарт, реализующий [RFC 7519](https://tools.ietf.org/html/rfc7519), для безопасного взаимодействия между двумя сторонами.
-
