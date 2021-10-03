@@ -1,6 +1,14 @@
+# Технологии
+Material UI + Next.js + React + Redux + Passport + JWT
+
+[<img src="https://cloud.githubusercontent.com/assets/13041/19686250/971bf7f8-9ac0-11e6-975c-188defd82df1.png" height="100">](https://github.com/zeit/next.js)
+&nbsp;&nbsp;&nbsp;&nbsp;[<img src="https://cdn.worldvectorlogo.com/logos/material-ui-1.svg" height="100">](http://www.material-ui.com)
+[<img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" height="100">](https://github.com/facebook/react)
+[<img src="https://raw.githubusercontent.com/reactjs/redux/master/logo/logo.png" height="100">](https://github.com/reactjs/redux)
+
 ## Как запустить на своём оборудовании
 
-Для работы веб-приложения, потребуется база данных Postgres 10.x. Скачать её можно на сайте разработчика https://www.postgresql.org/download/.
+Для работы веб-приложения потребуется база данных Postgres 10.x, скачать её можно на сайте разработчика https://www.postgresql.org/download/.
 
 Чтобы запустить сервер с локальной базой данных, воспользуйтесь командой:
 
