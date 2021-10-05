@@ -6,14 +6,13 @@
     "node": ">=14.0.0"
   },
   "scripts": {
-    "dev": "cross-env DBMODE=local next dev",
-    "dev:aws": "cross-env DBMODE=aws next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --write .",
-    "db:init": "cross-env DBMODE=local node scripts/init.js",
-    "db:show": "cross-env DBMODE=local node scripts/show.js"
+    "db:init": "node scripts/init.js",
+    "db:show": "node scripts/show.js"
   },
   "dependencies": {
     "@emotion/cache": "11.4.0",
@@ -30,7 +29,6 @@
     "recharts": "2.1.4",
     "uuid": "8.3.2",
     "jsonwebtoken": "8.5.1",
-    "aws-sdk": "2.999.0",
     "cookie": "0.4.1",
     "passport": "0.5.0",
     "passport-local": "1.0.0",
@@ -38,7 +36,6 @@
     "pg": "8.7.1"
   },
   "devDependencies": {
-    "cross-env": "7.0.3",
     "prettier": "2.4.1",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.2"

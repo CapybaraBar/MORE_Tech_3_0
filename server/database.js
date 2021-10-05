@@ -10,56 +10,19 @@ function getEnv(key) {
 }
 
 function getClient() {
-  switch (process.env.DBMODE) {
-    case 'local': {
-      const user = process.env.PGUSER || 'postgres'
-      const host = process.env.PGHOST || 'localhost'
-      const database = process.env.PGDATABASE || 'postgres'
-      const password = process.env.PGPASSWORD || '12345'
-      const port = parseInt(process.env.PGPORT) || 5432
+  const user = process.env.PGUSER || 'postgres'
+  const host = process.env.PGHOST || 'localhost'
+  const database = process.env.PGDATABASE || 'postgres'
+  const password = process.env.PGPASSWORD || '12345'
+  const port = parseInt(process.env.PGPORT) || 5432
 
-      return new Client({
-        user,
-        host,
-        database,
-        password,
-        port,
-      })
-    }
-    case 'aws': {
-      const accessKeyId = getEnv('CAPYBARA_AWS_ACCESS_KEY_ID')
-      const secretAccessKey = getEnv('CAPYBARA_AWS_SECRET_ACCESS_KEY')
-      const region = getEnv('CAPYBARA_AWS_POSTGRES_REGION')
-      const hostname = getEnv('CAPYBARA_AWS_POSTGRES_HOSTNAME')
-      const port = parseInt(getEnv('CAPYBARA_AWS_POSTGRES_PORT'))
-      const username = getEnv('CAPYBARA_AWS_POSTGRES_USERNAME')
-      const database = getEnv('CAPYBARA_AWS_POSTGRES_DATABASE')
-
-      const signerOptions = {
-        credentials: {
-          accessKeyId,
-          secretAccessKey,
-        },
-        region,
-        hostname,
-        port,
-        username,
-      }
-      const signer = new RDS.Signer()
-      const getPassword = () => signer.getAuthToken(signerOptions)
-
-      return new Client({
-        host: signerOptions.hostname,
-        port: signerOptions.port,
-        user: signerOptions.username,
-        database,
-        password: getPassword,
-      })
-    }
-    default: {
-      throw new Error('Environment variable "DBMODE" is required [local, aws]')
-    }
-  }
+  return new Client({
+    user,
+    host,
+    database,
+    password,
+    port,
+  })
 }
 
 function escapeId(str) {
