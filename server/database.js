@@ -1,13 +1,4 @@
 const { Client } = require('pg')
-const { RDS } = require('aws-sdk')
-
-function getEnv(key) {
-  const env = process.env[key]
-  if (env == null || env === '') {
-    throw new Error(`Environment variable "${key}" is required`)
-  }
-  return env
-}
 
 function getClient() {
   const user = process.env.PGUSER || 'postgres'
@@ -50,36 +41,97 @@ async function executeStatement(sql) {
   }
 }
 
+const schemaName = 'vtb'
+const schemaNameAsId = escapeId(schemaName)
+
+const usersTableName = 'users'
+const usersTableNameAsId = escapeId(usersTableName)
+
+const categoriesTableName = 'categories'
+const categoriesTableNameAsId = escapeId(categoriesTableName)
+
+const datasetsTableName = 'datasets'
+const datasetsTableNameAsId = escapeId(datasetsTableName)
+
+const supportedFormats = ['xml', 'csv', 'json']
+
 async function init() {
   await executeStatement(`
-    DROP SCHEMA IF EXISTS ${escapeId('vtb')} CASCADE;
+    DROP SCHEMA IF EXISTS ${schemaNameAsId} CASCADE;
   `)
   await executeStatement(`
-    CREATE SCHEMA ${escapeId('vtb')};
+    CREATE SCHEMA ${schemaNameAsId};
   `)
 
   await executeStatement(`
-    CREATE TABLE ${escapeId('vtb')}.${escapeId('users')} (
-      ${escapeId('id')} UUID PRIMARY KEY,
-      ${escapeId('createdAt')} BIGINT,
-      ${escapeId('username')} TEXT,
-      ${escapeId('hash')} TEXT,
-      ${escapeId('salt')} TEXT
+    CREATE TABLE ${schemaNameAsId}.${usersTableNameAsId} (
+      ${escapeId('id')} UUID NOT NULL PRIMARY KEY,
+      ${escapeId('companyId')} UUID NULL,
+      ${escapeId('createdAt')} BIGINT NOT NULL,
+      ${escapeId('username')} TEXT NOT NULL,
+      ${escapeId('hash')} TEXT NOT NULL,
+      ${escapeId('salt')} TEXT NOT NULL
     );
   `)
+
+  await executeStatement(`
+    CREATE TABLE ${schemaNameAsId}.${categoriesTableNameAsId} (
+      ${escapeId('id')} UUID NOT NULL PRIMARY KEY,
+      ${escapeId('name')} TEXT NOT NULL
+    );
+  `)
+
+  await executeStatement(`
+    CREATE TABLE ${schemaNameAsId}.${datasetsTableNameAsId} (
+      ${escapeId('id')} UUID NOT NULL PRIMARY KEY ,
+      ${escapeId('userId')} UUID NOT NULL,
+      ${escapeId('categoryId')} UUID NOT NULL,
+      ${escapeId('title')} TEXT NOT NULL,
+      ${escapeId('description')} TEXT NOT NULL,
+      ${escapeId('format')} TEXT NOT NULL,
+      ${escapeId('viewCount')} BIGINT NOT NULL,
+      ${escapeId('downloadCount')} BIGINT NOT NULL,
+      ${escapeId('releases')} JSONB NOT NULL,
+      ${escapeId('structure')} JSONB NOT NULL,
+      ${escapeId('subscriptionPrice')} BIGINT NULL,
+      ${escapeId('oneTimeSalePrice')} BIGINT NULL
+    );
+  `)
+
+  // releases: JSONB Array<{ releasedAt, releaseId, price }>
+
+  // structure: {
+  //   fieldName: text,
+  //     description?: text
+  //   englishDescription?: text,
+  //     russianDescription?: text,
+  //     format?: text
+  // }
 }
 async function show() {
   console.log('Users:')
   console.log(
     await executeStatement(`
-      SELECT * FROM ${escapeId('vtb')}.${escapeId('users')};
+      SELECT * FROM ${schemaNameAsId}.${usersTableNameAsId};
+    `),
+  )
+  console.log('Categories:')
+  console.log(
+    await executeStatement(`
+      SELECT * FROM ${schemaNameAsId}.${usersTableNameAsId};
+    `),
+  )
+  console.log('Categories:')
+  console.log(
+    await executeStatement(`
+      SELECT * FROM ${schemaNameAsId}.${sou};
     `),
   )
 }
 
 async function createUser({ id, createdAt, username, hash, salt }) {
   await executeStatement(`
-    INSERT INTO  ${escapeId('vtb')}.${escapeId('users')} (
+    INSERT INTO  ${schemaNameAsId}.${usersTableNameAsId} (
       ${escapeId('id')}, 
       ${escapeId('createdAt')}, 
       ${escapeId('username')}, 
@@ -97,7 +149,7 @@ async function createUser({ id, createdAt, username, hash, salt }) {
 
 async function findUser(username) {
   const rows = await executeStatement(`
-    SELECT * FROM ${escapeId('vtb')}.${escapeId('users')} 
+    SELECT * FROM ${schemaNameAsId}.${usersTableNameAsId} 
     WHERE ${escapeId('username')} = ${escapeStr(username)}
     LIMIT 1;
   `)
