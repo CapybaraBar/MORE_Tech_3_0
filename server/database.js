@@ -1203,7 +1203,7 @@ async function init() {
   const categories = []
   for await (const { name } of csvStream('initial-data/categories.csv')) {
     const id = uuidV4()
-    categories.push({ categoryId, name })
+    categories.push({ categoryId: id, name })
     await executeStatement(`
       INSERT INTO ${schemaNameAsId}.${categoriesTableNameAsId} (
         ${escapeId('id')},
