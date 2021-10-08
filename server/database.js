@@ -1,6 +1,7 @@
 const { Client } = require('pg')
 const readline = require('readline')
 const fs = require('fs')
+const util = require('util')
 
 function getClient() {
   const user = process.env.PGUSER || 'postgres'
@@ -26,13 +27,21 @@ function escapeStr(str) {
   return `'${String(str).replace(/(['])/gi, '$1$1')}'`
 }
 
-async function executeStatement(sql) {
+async function executeStatement(sql, isDebug) {
   const client = getClient()
 
   try {
     await client.connect()
 
+    if (isDebug) {
+      console.log('Sql:', sql)
+    }
+
     const { rows } = await client.query(sql)
+
+    if (isDebug) {
+      console.log('Result:', rows)
+    }
 
     if (rows == null) {
       return []
@@ -1079,10 +1088,7 @@ const getRandomItem = (arr) => arr[random(arr.length)]
 function getRandomCreatedAt() {
   const start = new Date(2020, 0, 1)
   const end = new Date()
-  return Math.round(
-    start.getTime() +
-      (random(10000) / 10000) * (end.getTime() - start.getTime()),
-  )
+  return Math.round(start.getTime() + (random(10000) / 10000) * (end.getTime() - start.getTime()))
 }
 
 const csvStream = async function* (fileName) {
@@ -1111,7 +1117,7 @@ const csvStream = async function* (fileName) {
   }
 }
 
-function createGovDataSetTitle() {
+function createGovDatasetTitle() {
   const statesRussia = [
     'Амурской',
     'Архангельской',
@@ -1165,21 +1171,178 @@ function createGovDataSetTitle() {
 
   switch (random(4)) {
     case 0:
-      return `Реестр организаций и объединений ${getRandomItem(
-        statesRussia,
-      )} области`
+      return `Реестр организаций и объединений ${getRandomItem(statesRussia)} области`
     case 1:
-      return `Реестр расположенных на территориях муниципальных образований ${getRandomItem(
-        statesRussia,
-      )} области`
+      return `Реестр расположенных на территориях муниципальных образований ${getRandomItem(statesRussia)} области`
     case 2:
-      return `Реестр ${getRandomItem(
-        types,
-      )} общественных объединений ${getRandomItem(statesRussia)} области`
+      return `Реестр ${getRandomItem(types)} общественных объединений ${getRandomItem(statesRussia)} области`
     case 3:
-      return `Социально-ориентированные некоммерческие организации ${getRandomItem(
-        statesRussia,
-      )} области`
+      return `Социально-ориентированные некоммерческие организации ${getRandomItem(statesRussia)} области`
+  }
+}
+
+function createBusinessDatasetTitle() {
+  return getRandomItem([
+    'Логистика',
+    'Розничные продажи',
+    'Спрос',
+    'Сезонность',
+    'Активность покупателей',
+    'Геопозиция',
+    'Кореляция',
+    'Темпы выручки',
+  ])
+}
+
+function generateRandomDataset({ categories, userId }) {
+  const id = uuidV4()
+  const categoryId = getRandomItem(categories).categoryId
+  const title = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => getRandomItem(words)).join(' ')
+  const description = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    .map(() => getRandomItem(words))
+    .join(' ')
+  const format = getRandomItem(supportedFormats)
+  const viewCount = random(1000)
+  const downloadCount = random(100)
+  const releases = []
+  const releaseCount = random(10) + 1
+  const structure = []
+  if (random(2) < 1) {
+    structure.push({
+      fieldName: getRandomItem(['id', 'uid', '_id', 'uuid', 'primaryKey', 'key', 'guid']),
+      description: 'Идентификатор',
+      englishDescription: random(2) < 1 ? 'Identifier' : undefined,
+      russianDescription: random(2) < 1 ? 'Идентификатор' : undefined,
+      type: getRandomItem(['text', 'string']),
+    })
+  }
+  if (random(2) < 1) {
+    structure.push({
+      fieldName: getRandomItem(['name', 'title', 'header']),
+      description: 'Имя',
+      englishDescription: random(2) < 1 ? 'Name' : undefined,
+      russianDescription: random(2) < 1 ? 'Имя' : undefined,
+      type: getRandomItem(['text', 'string']),
+    })
+  }
+  if (random(2) < 1) {
+    structure.push({
+      fieldName: getRandomItem(['value', 'price', 'count']),
+      description: 'Значение',
+      englishDescription: random(2) < 1 ? 'Value' : undefined,
+      russianDescription: random(2) < 1 ? 'Значение' : undefined,
+      type: getRandomItem(['int', 'number']),
+    })
+  }
+
+  if (random(2) < 1) {
+    structure.push({
+      fieldName: getRandomItem(['active', 'verified', 'checked', 'completed']),
+      description: 'Статус',
+      englishDescription: random(2) < 1 ? 'Status' : undefined,
+      russianDescription: random(2) < 1 ? 'Статус' : undefined,
+      type: getRandomItem(['boolean']),
+    })
+  }
+  if (random(2) < 1) {
+    structure.push({
+      fieldName: getRandomItem(['avg', 'average']),
+      description: 'Среднее',
+      englishDescription: random(2) < 1 ? 'Average' : undefined,
+      russianDescription: random(2) < 1 ? 'Среднее' : undefined,
+      type: getRandomItem(['int', 'number']),
+    })
+  }
+  if (random(2) < 1) {
+    structure.push({
+      fieldName: getRandomItem(['min', 'minimum']),
+      description: 'Минимум',
+      englishDescription: random(2) < 1 ? 'Minimum' : undefined,
+      russianDescription: random(2) < 1 ? 'Минимум' : undefined,
+      type: getRandomItem(['int', 'number']),
+    })
+  }
+  if (random(2) < 1) {
+    structure.push({
+      fieldName: getRandomItem(['max', 'maximum']),
+      description: 'Максимум',
+      englishDescription: random(2) < 1 ? 'Maximum' : undefined,
+      russianDescription: random(2) < 1 ? 'Максимум' : undefined,
+      type: getRandomItem(['int', 'number']),
+    })
+  }
+  for (let j = 0; j < 10; j++) {
+    if (random(2) < 1) {
+      const fieldName = getRandomItem(['norm', 'tg', 'cin', 'kValue', 'delta'])
+      const description = `${getRandomItem(['Value', 'Target', 'Limit'])} of ${fieldName}`
+      structure.push({
+        fieldName,
+        description,
+        englishDescription: random(2) < 1 ? description : undefined,
+        russianDescription: random(2) < 1 ? description : undefined,
+        type: getRandomItem(supportedTypes),
+      })
+    }
+  }
+  for (let releaseIndex = 0; releaseIndex < releaseCount; releaseIndex++) {
+    const release = {
+      releasedAt: getRandomCreatedAt(),
+      releaseId: uuidV4(),
+      data: [],
+    }
+
+    const maxK = random(1000) + 500
+    for (let k = 0; k < maxK; k++) {
+      const row = {}
+      release.data.push(row)
+      for (const { fieldName, type } of structure) {
+        switch (type) {
+          case 'int':
+          case 'number': {
+            row[fieldName] = random(1000000)
+            break
+          }
+          case 'text':
+          case 'string': {
+            row[fieldName] = getRandomItem(words)
+            break
+          }
+          case 'boolean': {
+            row[fieldName] = random(2) < 1 ? true : false
+            break
+          }
+          case 'date': {
+            row[fieldName] = new Date(getRandomCreatedAt()).toISOString()
+            break
+          }
+        }
+      }
+    }
+
+    releases.push(release)
+  }
+  const subscriptionPrice = random(2) < 1 ? undefined : random(10000) + 100
+  const oneTimeSalePrice = random(2) < 1 ? undefined : random(20000) + 1000
+  if (random(2) < 1) {
+    const releasePrice = random(10000) + 100
+    for (const release of releases) {
+      release.price = releasePrice
+    }
+  }
+
+  return {
+    id,
+    userId,
+    categoryId,
+    title,
+    description,
+    format,
+    viewCount,
+    downloadCount,
+    releases,
+    structure,
+    subscriptionPrice,
+    oneTimeSalePrice,
   }
 }
 
@@ -1229,9 +1392,7 @@ async function init() {
   `)
 
   const businessUsers = []
-  for await (const { name } of csvStream(
-    'initial-data/companies-business.csv',
-  )) {
+  for await (const { name } of csvStream('initial-data/companies-business.csv')) {
     const id = uuidV4()
     const verified = true
     const createdAt = getRandomCreatedAt()
@@ -1272,189 +1433,160 @@ async function init() {
     );
   `)
 
-  for (const { userId, username } of govUsers) {
+  for (const { userId } of govUsers) {
     const datasetCount = 1 + random(4)
     for (let index = 0; index < datasetCount; index++) {
-      const id = uuidV4()
-      const categoryId = getRandomItem(categories).categoryId
-      const title = createGovDataSetTitle()
-      const description = title.replace('Реестр', 'Перечень')
-      const format = getRandomItem(supportedFormats)
-      const viewCount = random(1000)
-      const downloadCount = random(100)
-      const releases = []
-      const releaseCount = random(10) + 1
-      const structure = []
-      if (random(2) < 1) {
-        structure.push({
-          fieldName: getRandomItem([
-            'id',
-            'uid',
-            '_id',
-            'uuid',
-            'primaryKey',
-            'key',
-            'guid',
-          ]),
-          description: 'Идентификатор',
-          englishDescription: random(2) < 1 ? 'Identifier' : undefined,
-          russianDescription: random(2) < 1 ? 'Идентификатор' : undefined,
-          type: getRandomItem(['text', 'string']),
-        })
-      }
-      if (random(2) < 1) {
-        structure.push({
-          fieldName: getRandomItem(['name', 'title', 'header']),
-          description: 'Имя',
-          englishDescription: random(2) < 1 ? 'Name' : undefined,
-          russianDescription: random(2) < 1 ? 'Имя' : undefined,
-          type: getRandomItem(['text', 'string']),
-        })
-      }
-      if (random(2) < 1) {
-        structure.push({
-          fieldName: getRandomItem(['value', 'price', 'count']),
-          description: 'Значение',
-          englishDescription: random(2) < 1 ? 'Value' : undefined,
-          russianDescription: random(2) < 1 ? 'Значение' : undefined,
-          type: getRandomItem(['int', 'number']),
-        })
-      }
-
-      if (random(2) < 1) {
-        structure.push({
-          fieldName: getRandomItem([
-            'active',
-            'verified',
-            'checked',
-            'completed',
-          ]),
-          description: 'Статус',
-          englishDescription: random(2) < 1 ? 'Status' : undefined,
-          russianDescription: random(2) < 1 ? 'Статус' : undefined,
-          type: getRandomItem(['boolean']),
-        })
-      }
-      if (random(2) < 1) {
-        structure.push({
-          fieldName: getRandomItem(['avg', 'average']),
-          description: 'Среднее',
-          englishDescription: random(2) < 1 ? 'Average' : undefined,
-          russianDescription: random(2) < 1 ? 'Среднее' : undefined,
-          type: getRandomItem(['int', 'number']),
-        })
-      }
-      if (random(2) < 1) {
-        structure.push({
-          fieldName: getRandomItem(['min', 'minimum']),
-          description: 'Минимум',
-          englishDescription: random(2) < 1 ? 'Minimum' : undefined,
-          russianDescription: random(2) < 1 ? 'Минимум' : undefined,
-          type: getRandomItem(['int', 'number']),
-        })
-      }
-      if (random(2) < 1) {
-        structure.push({
-          fieldName: getRandomItem(['max', 'maximum']),
-          description: 'Максимум',
-          englishDescription: random(2) < 1 ? 'Maximum' : undefined,
-          russianDescription: random(2) < 1 ? 'Максимум' : undefined,
-          type: getRandomItem(['int', 'number']),
-        })
-      }
-      for (let releaseIndex = 0; releaseIndex < releaseCount; releaseIndex++) {
-        const release = {}
-        for (const {
-          fieldName,
-          type,
-        } of structure) {
-          switch (type) {
-            case 'int':
-            case 'number': {
-              release[fieldName] = random(1000000)
-              break
-            }
-            case 'text':
-            case 'string':  {
-              release[fieldName] = getRandomItem(words)
-              break
-            }
-            case 'boolean': {
-              release[fieldName] = random(2)<1 ? true : false
-              break
-            }
-            case 'date': {
-              release[fieldName] = new Date(getRandomCreatedAt()).toISOString()
-              break
-            }
-          }
-        }
-        if(random(2) < 1 ) {
-          release.price = random(10000) + 100
-        }
-        releases.push(release)
-      }
-      const subscriptionPrice = (random(2) < 1) ? undefined : random(10000) + 100
-      const oneTimeSalePrice = (random(2) < 1) ? undefined : random(20000) + 1000
+      const dataset = generateRandomDataset({ categories, userId })
+      dataset.title = createGovDatasetTitle()
+      dataset.description = dataset.title.replace('Реестр', 'Перечень')
+      await createDataset(dataset)
     }
   }
 
-  // releases: JSONB Array<{ releasedAt, releaseId, price }>
-
-  // structure: {
-  //   fieldName: text,
-  //     description?: text
-  //   englishDescription?: text,
-  //     russianDescription?: text,
-  //     format?: text
-  // }
+  for (const { userId } of businessUsers) {
+    const datasetCount = 1 + random(14)
+    for (let index = 0; index < datasetCount; index++) {
+      const dataset = generateRandomDataset({ categories, userId })
+      dataset.title = createBusinessDatasetTitle()
+      dataset.description = dataset.title
+      await createDataset(dataset)
+    }
+  }
 }
+
 async function show() {
   console.log('Users:')
   console.log(
-    await executeStatement(`
+    util.inspect(
+      await executeStatement(`
       SELECT * FROM ${schemaNameAsId}.${usersTableNameAsId};
     `),
+      { compact: true, depth: 100, colors: true },
+    ),
   )
   console.log('Categories:')
   console.log(
-    await executeStatement(`
+    util.inspect(
+      await executeStatement(`
       SELECT * FROM ${schemaNameAsId}.${usersTableNameAsId};
     `),
+      { compact: true, depth: 100, colors: true },
+    ),
   )
   console.log('Datasets:')
   console.log(
-    await executeStatement(`
+    util.inspect(
+      await executeStatement(`
       SELECT * FROM ${schemaNameAsId}.${datasetsTableNameAsId};
     `),
+      { compact: true, depth: 100, colors: true },
+    ),
   )
 }
 
-async function createDataset() {
-  ;`
-  ${escapeId('id')},
-  ${escapeId('userId')},
-  ${escapeId('categoryId')},
-  ${escapeId('title')},
-  ${escapeId('description')},
-  ${escapeId('format')},
-  ${escapeId('viewCount')},
-  ${escapeId('downloadCount')},
-  ${escapeId('releases')},
-  ${escapeId('structure')},
-  ${escapeId('subscriptionPrice')},
-  ${escapeId('oneTimeSalePrice')}
-  `
+async function createDataset({
+  id,
+  userId,
+  categoryId,
+  title,
+  description = '',
+  format,
+  viewCount = 0,
+  downloadCount = 0,
+  releases,
+  structure,
+  subscriptionPrice = null,
+  oneTimeSalePrice = null,
+}) {
+  await executeStatement(`
+    INSERT INTO ${schemaNameAsId}.${datasetsTableNameAsId} (
+      ${escapeId('id')},
+      ${escapeId('userId')},
+      ${escapeId('categoryId')},
+      ${escapeId('title')},
+      ${escapeId('description')},
+      ${escapeId('format')},
+      ${escapeId('viewCount')},
+      ${escapeId('downloadCount')},
+      ${escapeId('releases')},
+      ${escapeId('structure')},
+      ${escapeId('subscriptionPrice')},
+      ${escapeId('oneTimeSalePrice')}
+    ) VALUES (
+      ${escapeStr(id)},
+      ${escapeStr(userId)},
+      ${escapeStr(categoryId)},
+      ${escapeStr(title)},
+      ${escapeStr(description)},
+      ${escapeStr(format)},
+      ${viewCount},
+      ${downloadCount},
+      ${escapeStr(JSON.stringify(releases))},
+      ${escapeStr(JSON.stringify(structure))},
+      ${subscriptionPrice},
+      ${oneTimeSalePrice}
+    );
+  `)
 }
 
-async function createUser({
-  id,
-  createdAt,
-  username,
-  hash,
-  salt,
-  verified = false,
-}) {
+async function getCategories() {
+  const rows = await executeStatement(`
+    SELECT * FROM ${schemaNameAsId}.${categoriesTableNameAsId};
+  `)
+  return rows
+}
+
+async function getDatasetPreviewsByCategoryId({ categoryId, skip, limit }) {
+  const rows = await executeStatement(`
+    SELECT
+      "A".${escapeId('id')},
+      "A".${escapeId('userId')},
+      "A".${escapeId('categoryId')},
+      "A".${escapeId('title')},
+      "A".${escapeId('description')},
+      "A".${escapeId('format')},
+      "A".${escapeId('viewCount')},
+      "A".${escapeId('downloadCount')},
+      "A".${escapeId('structure')},
+      "A".${escapeId('subscriptionPrice')},
+      "A".${escapeId('oneTimeSalePrice')}
+    FROM ${schemaNameAsId}.${datasetsTableNameAsId} "A" 
+    WHERE ${escapeId('categoryId')} = ${escapeStr(categoryId)}
+    LEFT JOIN ${schemaNameAsId}.${usersTableNameAsId} "B"
+    ON "A"."userId" = "B"."id"
+    LIMIT ${limit}
+    OFFSET ${skip}
+  `)
+  return rows
+}
+
+async function getDatasetPreviews({ skip, limit }) {
+  const rows = await executeStatement(
+    `
+    SELECT
+      "A".${escapeId('id')},
+      "A".${escapeId('userId')},
+      "A".${escapeId('categoryId')},
+      "A".${escapeId('title')},
+      "A".${escapeId('description')},
+      "A".${escapeId('format')},
+      "A".${escapeId('viewCount')},
+      "A".${escapeId('downloadCount')},
+      "A".${escapeId('structure')},
+      "A".${escapeId('subscriptionPrice')},
+      "A".${escapeId('oneTimeSalePrice')}
+    FROM ${schemaNameAsId}.${datasetsTableNameAsId} "A" 
+    LEFT JOIN ${schemaNameAsId}.${usersTableNameAsId} "B"
+    ON "A"."userId" = "B"."id"
+    LIMIT ${limit}
+    OFFSET ${skip}
+  `,
+    true,
+  )
+  return rows
+}
+
+async function createUser({ id, createdAt, username, hash, salt, verified = false }) {
   await executeStatement(`
     INSERT INTO ${schemaNameAsId}.${usersTableNameAsId} (
       ${escapeId('id')},
@@ -1502,4 +1634,7 @@ module.exports = {
   escapeStr,
   escapeId,
   executeStatement,
+  getDatasetPreviews,
+  getDatasetPreviewsByCategoryId,
+  getCategories,
 }

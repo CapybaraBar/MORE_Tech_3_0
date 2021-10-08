@@ -18,12 +18,7 @@ const Register = () => {
 
   return (
     <AuthContainer>
-      <AuthForm
-        autoComplete="off"
-        noValidate
-        action="/api/signup"
-        method="post"
-      >
+      <AuthForm autoComplete="off" noValidate action="/api/signup" method="post">
         <AuthFormControl variant="outlined">
           <TextField
             id="username"
@@ -48,12 +43,7 @@ const Register = () => {
             margin="normal"
           />
         </AuthFormControl>
-        <AuthButton
-          type="submit"
-          variant="outlined"
-          color="primary"
-          size="large"
-        >
+        <AuthButton type="submit" variant="outlined" color="primary" size="large">
           ЗАРЕГИСТРИРОВАТЬСЯ
         </AuthButton>
         <br />

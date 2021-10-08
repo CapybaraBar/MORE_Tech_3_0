@@ -4,9 +4,7 @@ import * as db from './database'
 
 export async function createUser({ username, password }) {
   const salt = crypto.randomBytes(16).toString('hex')
-  const hash = crypto
-    .pbkdf2Sync(password, salt, 1000, 64, 'sha512')
-    .toString('hex')
+  const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
 
   const createdAt = Date.now()
   const user = {
@@ -27,9 +25,7 @@ export async function findUser(username) {
 }
 
 export function validatePassword(user, inputPassword) {
-  const inputHash = crypto
-    .pbkdf2Sync(inputPassword, user.salt, 1000, 64, 'sha512')
-    .toString('hex')
+  const inputHash = crypto.pbkdf2Sync(inputPassword, user.salt, 1000, 64, 'sha512').toString('hex')
   const passwordsMatch = user.hash === inputHash
   return passwordsMatch
 }

@@ -41,12 +41,7 @@ const Login = () => {
             margin="normal"
           />
         </AuthFormControl>
-        <AuthButton
-          type="submit"
-          variant="outlined"
-          color="primary"
-          size="large"
-        >
+        <AuthButton type="submit" variant="outlined" color="primary" size="large">
           ВОЙТИ
         </AuthButton>
         <br />
