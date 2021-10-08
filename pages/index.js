@@ -3,7 +3,7 @@ import * as React from 'react'
 import DatasetCard from '../client/DatasetCard'
 import getServerSideProps from '../server/get-server-side-props'
 
-export default function Index({ categories, datasetPreviews }) {
+export default function Index({ datasetPreviews, categories }) {
   return (
     <div>
       <div>

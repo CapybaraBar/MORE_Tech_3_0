@@ -1,8 +1,8 @@
-import crypto from 'crypto'
-import { v4 as uuidv4 } from 'uuid'
-import * as db from './database'
+const crypto = require('crypto')
 
-export async function createUser({ username, password }) {
+const { v4: uuidv4 } = require('uuid')
+
+async function createUser({ username, password }) {
   const salt = crypto.randomBytes(16).toString('hex')
   const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
 
@@ -15,17 +15,21 @@ export async function createUser({ username, password }) {
     salt,
   }
 
-  await db.createUser(user)
-
-  return { username, createdAt }
+  return user
 }
 
-export async function findUser(username) {
+async function findUser(username) {
   return await db.findUser(username)
 }
 
-export function validatePassword(user, inputPassword) {
+function validatePassword(user, inputPassword) {
   const inputHash = crypto.pbkdf2Sync(inputPassword, user.salt, 1000, 64, 'sha512').toString('hex')
   const passwordsMatch = user.hash === inputHash
   return passwordsMatch
+}
+
+module.exports = {
+  createUserInMemory: createUser,
+  findUser,
+  validatePassword
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import { TextField } from '@mui/material'
+import Divider from '@mui/material/Divider';
 
 import Link from '../client/Link'
 import AuthContainer from '../client/AuthContainer'
@@ -44,10 +45,7 @@ const Login = () => {
         <AuthButton type="submit" variant="outlined" color="primary" size="large">
           ВОЙТИ
         </AuthButton>
-        <br />
-        <Link href="/register" color="secondary">
-          Создать аккаунт
-        </Link>
+        <Divider> или </Divider>
       </AuthForm>
     </AuthContainer>
   )

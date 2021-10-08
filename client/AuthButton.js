@@ -4,7 +4,7 @@ import { Button } from '@mui/material'
 
 const Root = styled(Button)(({ theme }) => ({
   '&': {
-    margin: `${theme.spacing(4)} 0`,
+    margin: `${theme.spacing(2)} 0`,
   },
 }))
 
