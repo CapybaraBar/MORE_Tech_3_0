@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Typography } from '@mui/material'
+import {Card, CardContent, Typography} from '@mui/material'
 import { styled } from '@mui/material/styles'
 
 const Root = styled('div')(({ theme }) => ({
@@ -26,11 +26,32 @@ const Title = styled(Typography)(({ theme }) => ({
   },
 }))
 
+const Container = styled(Card)(({ theme }) => ({
+  '&': {
+    width: '480px',
+    margin: `${theme.spacing(4)} auto`,
+    ['@media (max-width:780px)']: {
+      width: '100%',
+    },
+    padding: theme.spacing(4),
+  },
+}))
+
+// const Container = styled(Card)(({ theme }) => ({
+//   '&': {
+//
+//   },
+// }))
+
 const AuthContainer = ({ children }) => {
   return (
     <Root>
       <Title variant="h2">ВТБ Data Marketplace</Title>
-      <React.Fragment>{children}</React.Fragment>
+      <Container>
+        {/*<Container>*/}
+          <CardContent>{children}</CardContent>
+{/*        </Container>*/}
+      </Container>
     </Root>
   )
 }

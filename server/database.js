@@ -78,7 +78,7 @@ async function init() {
   `)
 
   await createUser(
-    await userUtils.createUserInMemory({ username: 'admin', password: 'admin'})
+    userUtils.createUserInMemory({ username: 'admin', password: 'admin'})
   )
 }
 
@@ -105,7 +105,6 @@ async function createUser({ id, createdAt, username, hash, salt }) {
       ${escapeId('salt')}
     ) VALUES (
       ${escapeStr(id)},
-      ${escapeStr(verified)},
       ${createdAt},
       ${escapeStr(username)},
       ${escapeStr(hash)},
@@ -119,9 +118,9 @@ async function findUser(username) {
     SELECT * FROM ${schemaNameAsId}.${usersTableNameAsId} 
     WHERE ${escapeId('username')} = ${escapeStr(username)}
     LIMIT 1;
-  `)
+  `, true)
 
-  if (rows.length === 0) {
+  if (rows.length === 0 || rows[0].id == null) {
     return null
   }
 

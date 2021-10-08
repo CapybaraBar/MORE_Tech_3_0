@@ -1,14 +1,14 @@
 const crypto = require('crypto')
 
-const { v4: uuidv4 } = require('uuid')
+const { v4: uuid } = require('uuid')
 
-async function createUser({ username, password }) {
+function createUserInMemory({ username, password }) {
   const salt = crypto.randomBytes(16).toString('hex')
   const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
 
   const createdAt = Date.now()
   const user = {
-    id: uuidv4(),
+    id: uuid(),
     createdAt,
     username,
     hash,
@@ -18,10 +18,6 @@ async function createUser({ username, password }) {
   return user
 }
 
-async function findUser(username) {
-  return await db.findUser(username)
-}
-
 function validatePassword(user, inputPassword) {
   const inputHash = crypto.pbkdf2Sync(inputPassword, user.salt, 1000, 64, 'sha512').toString('hex')
   const passwordsMatch = user.hash === inputHash
@@ -29,7 +25,6 @@ function validatePassword(user, inputPassword) {
 }
 
 module.exports = {
-  createUserInMemory: createUser,
-  findUser,
+  createUserInMemory,
   validatePassword
 }
