@@ -1,7 +1,5 @@
-import url from 'url'
 import { getAuthCookie } from './auth'
-
-const MAX_DATASETS_PER_PAGE = 20
+import loadDatasets from './load-datasets'
 
 const getServerSideProps = async function ({ req, res, params = {}, query = {} }) {
   const user = await getAuthCookie(req)
@@ -16,34 +14,17 @@ const getServerSideProps = async function ({ req, res, params = {}, query = {} }
   }
 
   const { categoryId = null } = params
-  const page = +query.page
-  let maxPages = null
-  let datasetPreviews = []
+  let {total, datasets} = await loadDatasets()
   let categories = []
-
-  const { pathname } = url.parse(req.url)
-
-  if (pathname === '/') {
-    // datasetPreviews = await getDatasetPreviews({ skip: MAX_DATASETS_PER_PAGE * page, limit: MAX_DATASETS_PER_PAGE })
-    maxPages = Math.ceil(datasetPreviews.length / MAX_DATASETS_PER_PAGE)
-  }
-  if (pathname.includes('/categories/')) {
-    // datasetPreviews = await getDatasetPreviewsByCategoryId({
-    //   categoryId,
-    //   skip: MAX_DATASETS_PER_PAGE * page,
-    //   limit: MAX_DATASETS_PER_PAGE,
-    // })
-    maxPages = Math.ceil(datasetPreviews.length / MAX_DATASETS_PER_PAGE)
-  }
+console.log(require('util').inspect(datasets, {depth:1000}))
 
   return {
     props: {
       user,
       categoryId,
       categories,
-      page,
-      maxPages,
-      datasetPreviews,
+      datasets,
+      total
     },
   }
 }

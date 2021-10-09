@@ -71,9 +71,10 @@ async function init() {
     CREATE TABLE ${schemaNameAsId}.${usersTableNameAsId} (
       ${escapeId('id')} UUID NOT NULL PRIMARY KEY,
       ${escapeId('createdAt')} BIGINT NOT NULL,
-      ${escapeId('username')} TEXT NOT NULL,
-      ${escapeId('hash')} TEXT NOT NULL,
-      ${escapeId('salt')} TEXT NOT NULL
+      ${escapeId('username')} TEXT NULL,
+      ${escapeId('hash')} TEXT NULL,
+      ${escapeId('salt')} TEXT NULL,
+      ${escapeId('googleId')} TEXT NULL
     );
   `)
 
@@ -95,25 +96,27 @@ async function show() {
 }
 
 
-async function createUser({ id, createdAt, username, hash, salt }) {
+async function createUser({ id, createdAt, username, hash, salt, googleId }) {
   await executeStatement(`
     INSERT INTO ${schemaNameAsId}.${usersTableNameAsId} (
       ${escapeId('id')},
       ${escapeId('createdAt')},
       ${escapeId('username')},
       ${escapeId('hash')},
-      ${escapeId('salt')}
+      ${escapeId('salt')},
+      ${escapeId('googleId')}
     ) VALUES (
       ${escapeStr(id)},
       ${createdAt},
-      ${escapeStr(username)},
-      ${escapeStr(hash)},
-      ${escapeStr(salt)}
+      ${username == null ? 'NULL' : escapeStr(username)},
+      ${hash == null ? 'NULL' : escapeStr(hash)},
+      ${salt == null ? 'NULL' : escapeStr(salt)},
+      ${googleId == null ? 'NULL' : escapeStr(googleId)}
     );
   `)
 }
 
-async function findUser(username) {
+async function findUserByName(username) {
   const rows = await executeStatement(`
     SELECT * FROM ${schemaNameAsId}.${usersTableNameAsId} 
     WHERE ${escapeId('username')} = ${escapeStr(username)}
@@ -133,9 +136,28 @@ async function findUser(username) {
   }
 }
 
+async function findUserByGoogleId(googleId) {
+  const rows = await executeStatement(`
+    SELECT * FROM ${schemaNameAsId}.${usersTableNameAsId} 
+    WHERE ${escapeId('googleId')} = ${escapeStr(googleId)}
+    LIMIT 1;
+  `, true)
+
+  if (rows.length === 0 || rows[0].id == null) {
+    return null
+  }
+
+  return {
+    id: rows[0].id,
+    createdAt: +rows[0].createdAt,
+    username: rows[0].username,
+    googleId: rows[0].hash
+  }
+}
+
 module.exports = {
   createUser,
-  findUser,
+  findUser: findUserByName,
   init,
   show,
   escapeStr,

@@ -30,8 +30,10 @@
     "uuid": "8.3.2",
     "jsonwebtoken": "8.5.1",
     "cookie": "0.4.1",
+    "datahub-client": "0.5.8",
     "passport": "0.5.0",
     "passport-local": "1.0.0",
+    "passport-google-oauth": "2.0.0",
     "next-connect": "0.10.2",
     "pg": "8.7.1"
   },
