@@ -20,7 +20,7 @@ import Copyright from '../client/Copyright'
 
 import DatasetCard from '../client/DatasetCard'
 import getServerSideProps from '../server/get-server-side-props'
-import {FormControl, InputLabel, OutlinedInput} from "@mui/material";
+import {FormControl, InputLabel, OutlinedInput, SpeedDial, SpeedDialAction, SpeedDialIcon} from "@mui/material";
 
 const drawerWidth = 240
 
@@ -164,7 +164,13 @@ export default function Index({ datasets, categories }) {
               <DatasetCard key={entity.urn} {...entity} />
             ))}
           </React.Fragment>
+          <SpeedDial
+          ariaLabel="SpeedDial basic example"
+          sx={{ position: 'absolute', bottom: 30, right: 30 }}
+          icon={<SpeedDialIcon />}
+          >
 
+        </SpeedDial>
           <Copyright sx={{ pt: 4 }} />
         </Container>
       </Box>

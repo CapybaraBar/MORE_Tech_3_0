@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles'
 import Divider from '@mui/material/Divider'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
+import Checkbox from '@mui/material/Checkbox'
 
 const Root = styled('div')(({ theme }) => ({
   '&': {
@@ -31,7 +32,7 @@ const DatasetCard = ({ name, properties, urn, tags: rawTags}) => {
   return (
     <Root>
       <Container>
-        <Typography variant="h4">{name}</Typography>
+        <Typography variant="h4"><Checkbox/>{name}</Typography>
         <CardContent>
           {description ? <React.Fragment>
             <Typography variant="h6">Description:</Typography>
